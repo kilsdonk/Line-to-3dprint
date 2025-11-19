@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lockletter app with SWITCHABLE Layers - Complete</title>
+    
+    <!-- ===================================================================================== -->
+    <!-- CSS STYLES SECTION - ALL VISUAL STYLING -->
+    <!-- ===================================================================================== -->
+    <style>
+        /* ================================================================================= */
+        /* GENERAL PAGE STYLES */
+        /* ================================================================================= */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .header-note {
+            color: #666;
+            font-style: italic;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+        
+        /* ================================================================================= */
+        /* SHAPELY SECTION STYLES - TOP UPLOAD AREA */
+        /* ================================================================================= */
+        .shapely-section {
+            max-width: 1000px;
+            margin: 0 auto 10px auto;
+            background: white;
+            padding: 30px;
+            color: #333;
+        }
+        
+        .shapely-upload {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .shapely-upload-btn {
+            background: #f9f9f9;
+            border: 2px solid #ccc;
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .shapely-upload-btn:hover {
+            background: #f0f0f0;
+            border-color: #999;
+        }
+        
+        .shapely-preview {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .shapely-preview-box {
+            flex: 1;
+            background: #f9f9f9;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            height: 280px;
+            border: 3px solid #333;
+        }
+        
+        .shapely-preview-box h3 {
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .shapely-svg-content {
+            width: 100%;
+            height: 220px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .shapely-svg-content svg {
+            max-width: 90%;
+            max-height: 90%;
+            width: auto;
+            height: auto;
+        }
+        
+        .shapely-controls {
+            background: #f8f8f8;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .shapely-controls-grid {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        
+        .shapely-control-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .shapely-control-item label {
+            min-width: 80px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .shapely-control-item input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background: white;
+            color: #333;
+        }
+        
+        .shapely-control-item input::placeholder {
+            color: #999;
+        }
+        
+        .shapely-action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .shapely-action-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .shapely-download-btn {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .shapely-download-btn:hover:not(:disabled) {
+            background: #1976D2;
+        }
+        
+        .shapely-download-btn:disabled {
+            background: #ccc;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .shapely-use-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .shapely-use-btn:hover:not(:disabled) {
+            background: #45a049;
+        }
+        
+        .shapely-use-btn:disabled {
+            background: #ccc;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        /* ================================================================================= */
+        /* LOCKLETTER APP STYLES - LAYER CONFIGURATION SECTION */
+        /* ================================================================================= */
+        .layer-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        .layer-card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            width: 220px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .layer-card.disabled {
+            background: #ffebeb;
+            border: 2px solid #ff6b6b;
+            opacity: 0.6;
+        }
+        .layer-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .layer-index {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: #007ACC;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 12px;
+            min-width: 20px;
+            text-align: center;
+        }
+        .layer-card.disabled .layer-index {
+            background: #ff6b6b;
+        }
+        .setting-group {
+            margin-bottom: 20px;
+        }
+        .setting-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .setting-input {
+            display: flex;
+            align-items: center;
+        }
+        .setting-input input {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 5px;
+            height: 36px;
+            box-sizing: border-box;
+        }
+        .setting-input select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            height: 36px;
+            box-sizing: border-box;
+        }
+        .filament-select {
+            color: #000;
+            font-weight: bold;
+        }
+        .setting-input select.disabled {
+            background-color: #ffebeb;
+            color: #cc0000;
+            border-color: #cc0000;
+        }
+        .generate-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .generate-btn:hover:not(:disabled) {
+            background: #45a049;
+        }
+        .generate-btn:disabled {
+            background: #ccc;
+            color: #999;
+            cursor: not-allowed;
+        }
+        .status {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin: 15px 0;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- ===================================================================================== -->
+        <!-- SECTION A: SHAPELY UPLOAD AND PROCESSING AREA -->
+        <!-- ===================================================================================== -->
+        <div class="shapely-section">
+            <!-- File Upload Section -->
+            <div class="shapely-upload">
+                <input type="file" id="shapelyFileInput" accept=".svg" style="display: none;">
+                <button class="shapely-upload-btn" onclick="document.getElementById('shapelyFileInput').click()">Upload Multi-Letter SVG</button>
+            </div>
+            
+            <!-- Preview Section - Shows Original, Face, and Return -->
+            <div class="shapely-preview">
+                <div class="shapely-preview-box">
+                    <h3>Original Input:</h3>
+                    <div class="shapely-svg-content" id="shapelyOriginalSvg">
+                        <div style="color: #999;">Upload SVG to see multi-letter processing</div>
+                    </div>
+                </div>
+                
+                <div class="shapely-preview-box">
+                    <h3>Face (Inside Walls):</h3>
+                    <div class="shapely-svg-content" id="shapelyFaceSvg">
+                        <div style="color: #999;">Face file will appear here</div>
+                    </div>
+                </div>
+                
+                <div class="shapely-preview-box">
+                    <h3>Return (Outside Walls):</h3>
+                    <div class="shapely-svg-content" id="shapelyReturnSvg">
+                        <div style="color: #999;">Return file will appear here</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Processing Controls -->
+            <div class="shapely-controls">
+                <div class="shapely-controls-grid">
+                    <div class="shapely-control-item">
+                        <label>Offset (mm):</label>
+                        <input type="number" id="shapelyOffsetInput" value="0.5" step="0.1" placeholder="0.5" style="width: 80px;">
+                    </div>
+                    
+                    <div class="shapely-control-item">
+                        <label>Corner (mm):</label>
+                        <input type="number" id="shapelyCornerInput" value="1.0" step="0.1" placeholder="1.0" style="width: 80px;">
+                    </div>
+                    
+                    <div class="shapely-control-item">
+                        <label>White Offset (mm):</label>
+                        <input type="number" id="shapelyWhiteOffsetInput" value="-1.0" step="0.1" placeholder="-1.0" style="width: 80px;">
+                    </div>
+                    
+                    <div class="shapely-control-item">
+                        <label>Curve Resolution:</label>
+                        <input type="number" id="shapelyResolutionInput" value="40" step="1" placeholder="40" style="width: 80px;">
+                    </div>
+                    
+                    <div class="shapely-control-item">
+                        <label>White Position:</label>
+                        <select id="shapelyWhitePositionSelect" style="width: 120px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="inside" selected>Inside Return</option>
+                            <option value="outside">Outside Return</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="shapely-action-buttons">
+                    <button class="shapely-action-btn shapely-download-btn" id="shapelyDownloadFaceBtn" onclick="downloadShapelyFace()" disabled>Download Face</button>
+                    <button class="shapely-action-btn shapely-download-btn" id="shapelyDownloadReturnBtn" onclick="downloadShapelyReturn()" disabled>Download Return</button>
+                    <button class="shapely-action-btn shapely-use-btn" id="shapelyUseCombinedBtn" onclick="useShapelyForLockletterCombined()" disabled>One Combined Object</button>
+                    <button class="shapely-action-btn shapely-use-btn" id="shapelyUseSeparateBtn" onclick="useShapelyForLockletterSeparate()" disabled>Two Separate Objects</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ===================================================================================== -->
+        <!-- SECTION B: FILAMENT AND HEIGHT SELECTORS (TOP CONTROLS) -->
+        <!-- ===================================================================================== -->
+        <div style="margin: 10px auto; max-width: 800px;">
+            <!-- Filament Selectors Container (Updated by lighting buttons) -->
+            <div class="filament-selectors-container" style="display: flex; justify-content: center; gap: 40px; margin-bottom: 20px; background: #f8f8f8; padding: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="display: flex; flex-direction: column;">
+                    <label style="font-weight: bold; margin-bottom: 8px; font-size: 14px;">Filament:</label>
+                    <select id="topFilament1" class="filament-select" style="background: #000000; color: #FFFFFF; font-weight: bold; width: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; height: 36px;" onchange="updateTopFilament(this, 1)">
+                        <option value="2">Polylite clear PC</option>
+                        <option value="1">Polymaker PC-PBT white</option>
+                        <option value="3" selected>Polymaker PC-PBT black</option>
+                        <option value="4">Extra free PC any color</option>
+                    </select>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <label style="font-weight: bold; margin-bottom: 8px; font-size: 14px;">Total return height</label>
+                    <div style="display: flex; align-items: center;">
+                        <input type="number" value="40" id="topTotalHeight" style="width: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-right: 5px; height: 20px;" onchange="updateTopTotalHeight(this.value)">
+                        <span style="font-weight: bold;">mm</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- =============================================================================== -->
+            <!-- SECTION C: LIGHTING MODE BUTTONS GRID -->
+            <!-- =============================================================================== -->
+            <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; margin-bottom: 30px;">
+                <button onclick="selectLightingMode('front_lit')" style="background: #D2691E; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">Front Lit<br>1000</small></button>
+                <button onclick="selectLightingMode('front_side_lit')" style="background: #B22222; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">Front + Side Lit<br>1110</small></button>
+                <button onclick="selectLightingMode('front_back_lit')" style="background: #2F4F4F; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">Front + Back Lit<br>1001</small></button>
+                <button onclick="selectLightingMode('all_around')" style="background: #483D8B; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">All around Lit<br>1111</small></button>
+                <button onclick="selectLightingMode('front_side_front_lit')" style="background: #8B008B; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">Front + Side-front Lit<br>1100</small></button>
+                <button onclick="selectLightingMode('front_side_front_back_lit')" style="background: #8B4513; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">Front + Side-front + Back Lit<br>1101</small></button>
+                <button onclick="selectLightingMode('side_front_lit')" style="background: #D2691E; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">Side-front Lit<br>0100</small></button>
+                <button onclick="selectLightingMode('side_lit')" style="background: #B22222; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">Side Lit<br>0110</small></button>
+                <button onclick="selectLightingMode('side_back_lit')" style="background: #9ACD32; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">Side + Back Lit<br>0111</small></button>
+                <button onclick="selectLightingMode('side_back_only_lit')" style="background: #5F9EA0; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">Side-back Lit<br>0010</small></button>
+                <button onclick="selectLightingMode('side_back_back_lit')" style="background: #2E8B57; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">Side-back + Back Lit<br>0011</small></button>
+                <button onclick="selectLightingMode('back_lit')" style="background: #FF6347; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">Back Lit<br>0001</small></button>
+                <button onclick="selectLightingMode('non_lit')" style="background: #4682B4; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">Non Lit<br>0000</small></button>
+                <button onclick="selectLightingMode('front_side_back_lit')" style="background: #8B008B; padding: 18px; border: none; border-radius: 10px; text-align: center; color: white; font-weight: bold; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">A<br><small style="font-size: 10px;">Front + Side-back Lit<br>1010</small></button>
+            </div>
+            
+            <!-- =============================================================================== -->
+            <!-- SECTION D: STATUS AND GENERATE BUTTON -->
+            <!-- =============================================================================== -->
+            <div style="text-align: center;">
+                <div style="font-style: italic; color: #666; margin: 15px 0;" id="status">Upload and process SVG in Shapely first</div>
+                <button style="background: #ccc; color: #999; border: none; padding: 12px 30px; border-radius: 5px; font-size: 16px; font-weight: bold;" id="generateBtn" disabled>Generate 3MF</button>
+            </div>
+        </div>
+        
+        <!-- ===================================================================================== -->
+        <!-- SECTION E: LAYER SETTINGS HEADER -->
+        <!-- ===================================================================================== -->
+        <div class="header-note" id="totalReturnHeight">
+            Layer Settings - Individual Heights | Total Return Height: <span id="totalHeight">40.0mm</span>
+        </div>
+        
+        <!-- ===================================================================================== -->
+        <!-- SECTION F: LAYER CONFIGURATION CARDS -->
+        <!-- ===================================================================================== -->
+        <div class="layer-cards" id="layerCards">
+            <!-- Layer cards generated here by JavaScript -->
+        </div>
+        
+        <!-- ===================================================================================== -->
+        <!-- SECTION G: FOOTER -->
+        <!-- ===================================================================================== -->
+        <footer>
+            SVG to 3MF Converter for OrcaSlicer - Multi-Material Edition with Switchable Layers
+        </footer>
+    </div>
+
+    <!-- ===================================================================================== -->
+    <!-- JAVASCRIPT SECTION - ALL FUNCTIONALITY -->
+    <!-- ===================================================================================== -->
+    <script>
+        // =====================================================================================
+        // SWITCHABLE LAYER CONFIGURATION SYSTEM - UPDATED WITH ENABLED/DISABLED
+        // =====================================================================================
+        
+        const layers = [
+            // ---------------------------------------------------------------------------------
+            // INDEX 0: INSIDE_FLOOR LAYER - Separate floor layer for white bottom
+            // ---------------------------------------------------------------------------------
+            { 
+                height: 2.0, 
+                filament: 1, // Polymaker PC-PBT white (always white for floor)
+                wallLoops: 2, 
+                name: "Inside_floor", 
+                bottomShellLayers: 2, 
+                index: 0,
+                zOffset: 0.2, // Configurable z-offset
+                outerWallLineWidth: 0.4, 
+                innerWallLineWidth: 0.4,
+                enabled: true // ✅ Switch this to false to disable this layer
+            },
+            
+            // ---------------------------------------------------------------------------------
+            // INDEX 1: INSIDE_WHITE LAYER - Main structural layer
+            // ---------------------------------------------------------------------------------
+            { 
+                height: 24, // Reduced from 40 to account for 2mm floor
+                filament: 1, // Polymaker PC-PBT white
+                wallLoops: 2, 
+                name: "Inside_white", 
+                bottomShellLayers: 0, // Changed from 2 to 0 since floor handles bottom
+                index: 1, 
+                insideWhiteTopEnabled: true, 
+                outerWallLineWidth: 0.4, 
+                innerWallLineWidth: 0.4,
+                enabled: true // ✅ Switch this to false to disable this layer
+            },
+            
+            // ---------------------------------------------------------------------------------
+            // INDEX 2: RETURN_FLOOR LAYER - Bottom return layer
+            // ---------------------------------------------------------------------------------
+            { 
+                height: 20, 
+                filament: 3, // Polymaker PC-PBT black
+                wallLoops: 2, 
+                name: "Return_floor", 
+                bottomShellLayers: 2, 
+                index: 2,
+                enabled: true // ✅ Switch this to false to disable this layer
+            },
+            
+            // ---------------------------------------------------------------------------------
+            // INDEX 3: RETURN_TOP LAYER - Top return layer
+            // ---------------------------------------------------------------------------------
+            { 
+                height: 20, 
+                filament: 3, // Polymaker PC-PBT black
+                wallLoops: 2, 
+                name: "Return_top", 
+                bottomShellLayers: 0, 
+                index: 3,
+                enabled: true // ✅ Switch this to false to disable this layer
+            },
+            
+            // ---------------------------------------------------------------------------------
+            // INDEX 4: RETURN_TOP2 LAYER - Additional top layer +4mm
+            // ---------------------------------------------------------------------------------
+            { 
+                height: 4, 
+                filament: 3, // Polymaker PC-PBT black
+                wallLoops: 1, 
+                name: "Return_top2", 
+                bottomShellLayers: 0, 
+                index: 4,
+                enabled: true // ✅ Switch this to false to disable this layer
+            },
+            
+            // ---------------------------------------------------------------------------------
+            // INDEX 5: RETURN_TOP3 LAYER - Click ring layer +0.6mm
+            // ---------------------------------------------------------------------------------
+            { 
+                height: 0.6, 
+                filament: 3, // Polymaker PC-PBT black
+                wallLoops: 1, 
+                name: "Return_top3", 
+                bottomShellLayers: 0, 
+                index: 5, 
+                outerWallLineWidth: 0.6, 
+                innerWallLineWidth: 0.6, 
+                outerWallSpeed: 30, 
+                innerWallSpeed: 30,
+                enabled: true // ✅ Switch this to false to disable this layer
+            },
+            
+            // ---------------------------------------------------------------------------------
+            // INDEX 6: INSIDE_WHITE_TOP LAYER - Inside white top layer +0.6mm
+            // ---------------------------------------------------------------------------------
+            { 
+                height: 0.6, 
+                filament: 1, // Polymaker PC-PBT white
+                wallLoops: 2, 
+                name: "Inside_white_top", 
+                bottomShellLayers: 0, 
+                index: 6, 
+                outerWallLineWidth: 0.6, 
+                innerWallLineWidth: 0.6, 
+                outerWallSpeed: 30, 
+                innerWallSpeed: 30,
+                enabled: true // ✅ Switch this to false to disable this layer
+            }
+        ];
+
+        // =====================================================================================
+        // MANUAL OVERRIDE PROTECTION - PREVENT LIGHTING MODES FROM OVERRIDING MANUAL CHANGES
+        // =====================================================================================
+        let manualFilamentOverrides = new Set(); // Track which layers have manual filament settings
+        let manualHeightOverrides = new Set(); // Track which layers have manual height settings
+
+        // =====================================================================================
+        // LAYER FILTERING FUNCTION - Returns only enabled layers
+        // =====================================================================================
+        function getEnabledLayers() {
+            return layers.filter(layer => layer.enabled === true);
+        }
+
+        // =====================================================================================
+        // LAYER CONTROL FUNCTIONS
+        // =====================================================================================
+
+        // Enable a specific layer by index
+        function enableLayer(index) {
+            const layer = layers.find(l => l.index === index);
+            if (layer) {
+                layer.enabled = true;
+                console.log(`✅ Layer ${index} (${layer.name}) enabled`);
+                renderLayers(); // Re-render to update visual state
+                return true;
+            }
+            console.error(`❌ Layer ${index} not found`);
+            return false;
+        }
+
+        // Disable a specific layer by index
+        function disableLayer(index) {
+            const layer = layers.find(l => l.index === index);
+            if (layer) {
+                layer.enabled = false;
+                console.log(`❌ Layer ${index} (${layer.name}) disabled`);
+                renderLayers(); // Re-render to update visual state
+                return true;
+            }
+            console.error(`❌ Layer ${index} not found`);
+            return false;
+        }
+
+        // Toggle a specific layer by index
+        function toggleLayer(index) {
+            const layer = layers.find(l => l.index === index);
+            if (layer) {
+                layer.enabled = !layer.enabled;
+                console.log(`🔄 Layer ${index} (${layer.name}) ${layer.enabled ? 'enabled' : 'disabled'}`);
+                renderLayers(); // Re-render to update visual state
+                return layer.enabled;
+            }
+            console.error(`❌ Layer ${index} not found`);
+            return false;
+        }
+
+        // Check if a layer is enabled
+        function isLayerEnabled(index) {
+            const layer = layers.find(l => l.index === index);
+            return layer ? layer.enabled : false;
+        }
+
+        // Get status of all layers
+        function getLayerStatus() {
+            return layers.map(layer => ({
+                index: layer.index,
+                name: layer.name,
+                enabled: layer.enabled
+            }));
+        }
+
+        // =====================================================================================
+        // LIGHTING MODE CONFIGURATION SYSTEM - FIXED FOR PROPER FILAMENT SETTINGS
+        // =====================================================================================
+        
+        const lightingModeConfigs = {
+            'front_lit': {
+                name: 'Front Lit',
+                code: '1000',
+                layout: 'single',
+                filament1: 3, // BLACK for both Return_floor and Return_top
+                filament2: 3,
+                height1: 20,
+                specialHeight: false,
+                color: '#D2691E'
+            },
+            'front_side_lit': {
+                name: 'Front + Side Lit',
+                code: '1110',
+                layout: 'single',
+                filament1: 2,
+                filament2: 2,
+                height1: 20,
+                specialHeight: false,
+                color: '#B22222'
+            },
+            'front_back_lit': {
+                name: 'Front + Back Lit',
+                code: '1001',
+                layout: 'single',
+                filament1: 3,
+                filament2: 3,
+                height1: 20,
+                specialHeight: false,
+                color: '#2F4F4F'
+            },
+            'all_around': {
+                name: 'All around Lit',
+                code: '1111',
+                layout: 'single',
+                filament1: 3,
+                filament2: 3,
+                height1: 20,
+                specialHeight: false,
+                color: '#483D8B'
+            },
+            'front_side_front_lit': {
+                name: 'Front + Side-front Lit',
+                code: '1100',
+                layout: 'dual',
+                filament1: 2,
+                filament2: 3,
+                height1: 0.6,
+                specialHeight: true,
+                color: '#8B008B'
+            },
+            'front_side_front_back_lit': {
+                name: 'Front + Side-front + Back Lit',
+                code: '1101',
+                layout: 'dual',
+                filament1: 2,
+                filament2: 3,
+                height1: 0.6,
+                specialHeight: true,
+                color: '#8B4513'
+            },
+            'side_front_lit': {
+                name: 'Side-front Lit',
+                code: '0100',
+                layout: 'dual',
+                filament1: 2,
+                filament2: 3,
+                height1: 0.6,
+                specialHeight: true,
+                color: '#D2691E'
+            },
+            'side_lit': {
+                name: 'Side Lit',
+                code: '0110',
+                layout: 'single',
+                filament1: 3,
+                filament2: 3,
+                height1: 20,
+                specialHeight: false,
+                color: '#B22222'
+            },
+            'side_back_lit': {
+                name: 'Side + Back Lit',
+                code: '0111',
+                layout: 'single',
+                filament1: 3,
+                filament2: 3,
+                height1: 20,
+                specialHeight: false,
+                color: '#9ACD32'
+            },
+            'side_back_only_lit': {
+                name: 'Side-back Lit',
+                code: '0010',
+                layout: 'dual',
+                filament1: 2,
+                filament2: 3,
+                height1: 0.6,
+                specialHeight: true,
+                color: '#5F9EA0'
+            },
+            'side_back_back_lit': {
+                name: 'Side-back + Back Lit',
+                code: '0011',
+                layout: 'dual',
+                filament1: 2,
+                filament2: 3,
+                height1: 0.6,
+                specialHeight: true,
+                color: '#2E8B57'
+            },
+            'back_lit': {
+                name: 'Back Lit',
+                code: '0001',
+                layout: 'single',
+                filament1: 3,
+                filament2: 3,
+                height1: 20,
+                specialHeight: false,
+                color: '#FF6347'
+            },
+            'non_lit': {
+                name: 'Non Lit',
+                code: '0000',
+                layout: 'single',
+                filament1: 3,
+                filament2: 3,
+                height1: 20,
+                specialHeight: false,
+                color: '#4682B4'
+            },
+            'front_side_back_lit': {
+                name: 'Front + Side-back Lit',
+                code: '1010',
+                layout: 'dual',
+                filament1: 2,
+                filament2: 3,
+                height1: 0.6,
+                specialHeight: true,
+                color: '#8B008B'
+            }
+        };
+
+        // =====================================================================================
+        // FILAMENT REFERENCE SYSTEM
+        // =====================================================================================
+        const filamentTypes = {
+            1: { name: "Polymaker PC-PBT white", color: "#FFFFFF", textColor: "#000000" },
+            2: { name: "Polylite clear PC", color: "#ADD8E6", textColor: "#000000" },
+            3: { name: "Polymaker PC-PBT black", color: "#000000", textColor: "#FFFFFF" },
+            4: { name: "Extra free PC any color", color: "#8DA3BA", textColor: "#000000" }
+        };
+
+        // =====================================================================================
+        // SHAPELY FUNCTIONALITY - FILE UPLOAD AND PROCESSING
+        // =====================================================================================
+        
+        let shapelyUploadedFile = null;
+        let shapelyFaceFile = null;
+        let shapelyReturnFile = null;
+        let shapelyWhiteFile = null;
+        let shapelyReturnBlob = null;
+        let shapelyWhiteBlob = null;
+
+        // File input change handler
+        document.getElementById('shapelyFileInput').addEventListener('change', function(e) {
+            shapelyUploadedFile = e.target.files[0];
+            if (shapelyUploadedFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const svgContent = e.target.result;
+                    const container = document.getElementById('shapelyOriginalSvg');
+                    container.innerHTML = svgContent;
+                    
+                    const svg = container.querySelector('svg');
+                    if (svg) {
+                        svg.style.maxWidth = '100%';
+                        svg.style.maxHeight = '100%';
+                        svg.style.width = 'auto';
+                        svg.style.height = 'auto';
+                    }
+                    
+                    processShapelySvg();
+                };
+                reader.readAsText(shapelyUploadedFile);
+            }
+        });
+
+        // Parameter change handlers
+        document.getElementById('shapelyOffsetInput').addEventListener('change', function() {
+            if (shapelyUploadedFile) {
+                processShapelySvg();
+            }
+        });
+
+        document.getElementById('shapelyCornerInput').addEventListener('change', function() {
+            if (shapelyUploadedFile) {
+                processShapelySvg();
+            }
+        });
+
+        document.getElementById('shapelyWhiteOffsetInput').addEventListener('change', function() {
+            if (shapelyUploadedFile) {
+                processShapelySvg();
+            }
+        });
+
+        document.getElementById('shapelyResolutionInput').addEventListener('change', function() {
+            if (shapelyUploadedFile) {
+                processShapelySvg();
+            }
+        });
+
+        document.getElementById('shapelyWhitePositionSelect').addEventListener('change', function() {
+            if (shapelyUploadedFile) {
+                processShapelySvg();
+            }
+        });
+
+        // Process SVG through Shapely
+        async function processShapelySvg() {
+            if (!shapelyUploadedFile) {
+                return;
+            }
+
+            const faceContainer = document.getElementById('shapelyFaceSvg');
+            const returnContainer = document.getElementById('shapelyReturnSvg');
+            faceContainer.innerHTML = '<div style="color: #666;">Processing Face...</div>';
+            returnContainer.innerHTML = '<div style="color: #666;">Processing Return...</div>';
+            
+            document.getElementById('shapelyDownloadFaceBtn').disabled = true;
+            document.getElementById('shapelyDownloadReturnBtn').disabled = true;
+            document.getElementById('shapelyUseCombinedBtn').disabled = true;
+            document.getElementById('shapelyUseSeparateBtn').disabled = true;
+
+            const formData = new FormData();
+            formData.append('file', shapelyUploadedFile);
+            formData.append('offset', document.getElementById('shapelyOffsetInput').value);
+            formData.append('corner', document.getElementById('shapelyCornerInput').value);
+            formData.append('white_offset', document.getElementById('shapelyWhiteOffsetInput').value);
+            formData.append('resolution', document.getElementById('shapelyResolutionInput').value);
+            formData.append('white_position', document.getElementById('shapelyWhitePositionSelect').value);
+
+            try {
+                const response = await fetch('/shapely_convert', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.face_svg_content) {
+                        faceContainer.innerHTML = result.face_svg_content;
+                        const faceSvg = faceContainer.querySelector('svg');
+                        if (faceSvg) {
+                            faceSvg.style.maxWidth = '100%';
+                            faceSvg.style.maxHeight = '100%';
+                            faceSvg.style.width = 'auto';
+                            faceSvg.style.height = 'auto';
+                        }
+                    }
+                    
+                    if (result.return_svg_content) {
+                        returnContainer.innerHTML = result.return_svg_content;
+                        const returnSvg = returnContainer.querySelector('svg');
+                        if (returnSvg) {
+                            returnSvg.style.maxWidth = '100%';
+                            returnSvg.style.maxHeight = '100%';
+                            returnSvg.style.width = 'auto';
+                            returnSvg.style.height = 'auto';
+                        }
+                    }
+                    
+                    shapelyFaceFile = result.face_filename;
+                    shapelyReturnFile = result.return_filename;
+                    shapelyWhiteFile = result.white_filename;
+                    
+                    document.getElementById('shapelyDownloadFaceBtn').disabled = false;
+                    document.getElementById('shapelyDownloadReturnBtn').disabled = false;
+                    document.getElementById('shapelyUseCombinedBtn').disabled = false;
+                    document.getElementById('shapelyUseSeparateBtn').disabled = false;
+                    
+                    console.log('✅ Shapely processing complete with white file:', result.message);
+                    
+                } else {
+                    faceContainer.innerHTML = '<div style="color: #cc0000;">Error: ' + result.error + '</div>';
+                    returnContainer.innerHTML = '<div style="color: #cc0000;">Error: ' + result.error + '</div>';
+                }
+            } catch (error) {
+                faceContainer.innerHTML = '<div style="color: #cc0000;">Processing failed: ' + error.message + '</div>';
+                returnContainer.innerHTML = '<div style="color: #cc0000;">Processing failed: ' + error.message + '</div>';
+            }
+        }
+
+        // Download functions
+        function downloadShapelyFace() {
+            if (shapelyFaceFile) {
+                window.open('/shapely_download/' + encodeURIComponent(shapelyFaceFile));
+            }
+        }
+
+        function downloadShapelyReturn() {
+            if (shapelyReturnFile) {
+                window.open('/shapely_download/' + encodeURIComponent(shapelyReturnFile));
+            }
+        }
+
+        // Use Shapely files for 3D printing - Combined object (current behavior)
+        async function useShapelyForLockletterCombined() {
+            if (!shapelyReturnFile || !shapelyWhiteFile) {
+                alert('No files available. Please process an SVG first.');
+                return;
+            }
+            
+            try {
+                const returnResponse = await fetch('/shapely_download/' + encodeURIComponent(shapelyReturnFile));
+                const whiteResponse = await fetch('/shapely_download/' + encodeURIComponent(shapelyWhiteFile));
+                
+                if (returnResponse.ok && whiteResponse.ok) {
+                    shapelyReturnBlob = await returnResponse.blob();
+                    shapelyWhiteBlob = await whiteResponse.blob();
+                    
+                    const returnFile = new File([shapelyReturnBlob], shapelyReturnFile, { type: 'image/svg+xml' });
+                    const whiteFile = new File([shapelyWhiteBlob], shapelyWhiteFile, { type: 'image/svg+xml' });
+                    
+                    setSvgFilesForLockletter(returnFile, whiteFile);
+                    
+                    document.getElementById('status').textContent = 'Using Shapely files for COMBINED object - Return: ' + shapelyReturnFile + ', White: ' + shapelyWhiteFile;
+                    
+                    const generateBtn = document.getElementById('generateBtn');
+                    generateBtn.disabled = false;
+                    generateBtn.style.background = '#4CAF50';
+                    generateBtn.style.color = 'white';
+                    generateBtn.style.cursor = 'pointer';
+                    generateBtn.textContent = 'Generate Combined 3MF';
+                    
+                    document.getElementById('generateBtn').scrollIntoView({ behavior: 'smooth' });
+                    
+                } else {
+                    throw new Error('Failed to fetch files');
+                }
+            } catch (error) {
+                alert('Failed to prepare files for combined 3D printing: ' + error.message);
+            }
+        }
+
+        // Use Shapely files for 3D printing - Separate objects (UPDATED TO CREATE ZIP WITH TWO 3MF FILES)
+        async function useShapelyForLockletterSeparate() {
+            if (!shapelyReturnFile || !shapelyWhiteFile) {
+                alert('No files available. Please process an SVG first.');
+                return;
+            }
+            
+            try {
+                const returnResponse = await fetch('/shapely_download/' + encodeURIComponent(shapelyReturnFile));
+                const whiteResponse = await fetch('/shapely_download/' + encodeURIComponent(shapelyWhiteFile));
+                
+                if (returnResponse.ok && whiteResponse.ok) {
+                    shapelyReturnBlob = await returnResponse.blob();
+                    shapelyWhiteBlob = await whiteResponse.blob();
+                    
+                    const returnFile = new File([shapelyReturnBlob], shapelyReturnFile, { type: 'image/svg+xml' });
+                    const whiteFile = new File([shapelyWhiteBlob], shapelyWhiteFile, { type: 'image/svg+xml' });
+                    
+                    // UPDATED: Use new function for separate 3MF files
+                    setSvgFilesForLockletterSeparate(returnFile, whiteFile);
+                    
+                    document.getElementById('status').textContent = 'Using Shapely files for SEPARATE 3MF files - Return: ' + shapelyReturnFile + ', White: ' + shapelyWhiteFile;
+                    
+                    const generateBtn = document.getElementById('generateBtn');
+                    generateBtn.disabled = false;
+                    generateBtn.style.background = '#FF6B35';
+                    generateBtn.style.color = 'white';
+                    generateBtn.style.cursor = 'pointer';
+                    generateBtn.textContent = 'Generate Separate 3MFs';
+                    
+                    document.getElementById('generateBtn').scrollIntoView({ behavior: 'smooth' });
+                    
+                } else {
+                    throw new Error('Failed to fetch files');
+                }
+            } catch (error) {
+                alert('Failed to prepare files for separate 3D printing: ' + error.message);
+            }
+        }
+
+        // =====================================================================================
+        // MAIN LOCKLETTER APP INITIALIZATION
+        // =====================================================================================
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // =====================================================================================
+            // COLOR REFERENCE SYSTEM
+            // =====================================================================================
+            const colors = {
+                1: "#FFFFFF", // White
+                2: "#ADD8E6", // Light Blue
+                3: "#000000", // Black
+                4: "#8DA3BA"  // Grey
+            };
+            
+            // =====================================================================================
+            // GLOBAL VARIABLES
+            // =====================================================================================
+            let svgReturnFile = null;
+            let svgWhiteFile = null;
+            let selectedLightingMode = 'front_lit';
+            let printingMode = 'combined'; // 'combined' or 'separate'
+            
+            const layerCardsContainer = document.getElementById('layerCards');
+            const statusText = document.getElementById('status');
+            const generateBtn = document.getElementById('generateBtn');
+            
+            // =====================================================================================
+            // EVENT LISTENERS
+            // =====================================================================================
+            generateBtn.addEventListener('click', generate3MF);
+            
+            // Make variables globally accessible
+            window.colors = colors;
+            window.svgReturnFile = svgReturnFile;
+            window.svgWhiteFile = svgWhiteFile;
+            window.selectedLightingMode = selectedLightingMode;
+            window.printingMode = printingMode;
+            
+            renderLayers();
+            
+            // =====================================================================================
+            // HELPER FUNCTIONS
+            // =====================================================================================
+            
+            window.setSvgFilesForLockletter = function(returnFile, whiteFile) {
+                window.svgReturnFile = returnFile;
+                window.svgWhiteFile = whiteFile;
+                svgReturnFile = returnFile;
+                svgWhiteFile = whiteFile;
+                printingMode = 'combined';
+                statusText.textContent = `Using Shapely files for COMBINED object - Return: ${returnFile.name}, White: ${whiteFile.name}`;
+                
+                generateBtn.disabled = false;
+                generateBtn.style.background = '#4CAF50';
+                generateBtn.style.color = 'white';
+                generateBtn.style.cursor = 'pointer';
+                generateBtn.textContent = 'Generate Combined 3MF';
+            };
+
+            // UPDATED: New function for separate objects - creates ZIP with two 3MF files
+            window.setSvgFilesForLockletterSeparate = function(returnFile, whiteFile) {
+                window.svgReturnFile = returnFile;
+                window.svgWhiteFile = whiteFile;
+                svgReturnFile = returnFile;
+                svgWhiteFile = whiteFile;
+                printingMode = 'separate';
+                statusText.textContent = `Using Shapely files for SEPARATE 3MF files - Return: ${returnFile.name}, White: ${whiteFile.name}`;
+                
+                generateBtn.disabled = false;
+                generateBtn.style.background = '#FF6B35';
+                generateBtn.style.color = 'white';
+                generateBtn.style.cursor = 'pointer';
+                generateBtn.textContent = 'Generate Separate 3MFs';
+            };
+            
+            function updateTotalHeight() {
+                const enabledLayers = getEnabledLayers();
+                const returnTopLayer = enabledLayers.find(layer => layer.name === "Return_top");
+                const returnFloorLayer = enabledLayers.find(layer => layer.name === "Return_floor");
+                const insideWhiteLayer = enabledLayers.find(layer => layer.name === "Inside_white");
+                const insideFloorLayer = enabledLayers.find(layer => layer.name === "Inside_floor");
+                
+                const totalReturnHeight = (returnTopLayer ? returnTopLayer.height : 0) + 
+                                         (returnFloorLayer ? returnFloorLayer.height : 0);
+                
+                const totalInsideHeight = (insideFloorLayer ? insideFloorLayer.height : 0) + 
+                                         (insideWhiteLayer ? insideWhiteLayer.height : 0);
+                
+                document.getElementById('totalHeight').textContent = totalReturnHeight.toFixed(1) + 'mm';
+                
+                const topTotalHeightInput = document.getElementById('topTotalHeight');
+                if (topTotalHeightInput) {
+                    topTotalHeightInput.value = totalReturnHeight.toFixed(0);
+                }
+                
+                if (insideWhiteLayer && insideFloorLayer) {
+                    const newInsideWallsHeight = totalReturnHeight - insideFloorLayer.height;
+                    if (newInsideWallsHeight > 0) {
+                        insideWhiteLayer.height = newInsideWallsHeight;
+                        const insideWhiteInput = document.getElementById(`height-${insideWhiteLayer.index}`);
+                        if (insideWhiteInput) {
+                            insideWhiteInput.value = newInsideWallsHeight.toFixed(1);
+                        }
+                    }
+                }
+            }
+            
+            window.updateTotalHeight = updateTotalHeight;
+            
+            // =====================================================================================
+            // LAYER RENDERING SYSTEM - UPDATED WITH ENABLED/DISABLED VISUAL STATE
+            // =====================================================================================
+            function renderLayers() {
+                const displayOrder = [
+                    layers.find(layer => layer.name === "Inside_floor"),
+                    layers.find(layer => layer.name === "Inside_white"),
+                    layers.find(layer => layer.name === "Return_floor"),
+                    layers.find(layer => layer.name === "Return_top"),
+                    layers.find(layer => layer.name === "Inside_white_top")
+                ];
+                
+                let html = '';
+                
+                displayOrder.forEach(layer => {
+                    if (!layer) return;
+                    
+                    const isReturnTop = layer.name === "Return_top";
+                    const isInsideWhite = layer.name === "Inside_white";
+                    const isInsideFloor = layer.name === "Inside_floor";
+                    const returnTop3Layer = layers.find(l => l.name === "Return_top3");
+                    const insideWhiteTopLayer = layers.find(l => l.name === "Inside_white_top");
+                    
+                    // Add disabled class if layer is not enabled
+                    const disabledClass = layer.enabled ? '' : ' disabled';
+                    
+                    html += `
+                    <div class="layer-card${disabledClass}">
+                        <div class="layer-index">Index: ${layer.index}</div>
+                        <div class="layer-title">${layer.name}</div>
+                        
+                        <div class="setting-group">
+                            <label>Enabled:</label>
+                            <div class="setting-input">
+                                <select id="enabled-${layer.index}" onchange="updateLayer(${layer.index}, 'enabled', this.value === 'true')">
+                                    <option value="true" ${layer.enabled ? 'selected' : ''}>Enabled</option>
+                                    <option value="false" ${!layer.enabled ? 'selected' : ''}>Disabled</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label>Height:</label>
+                            <div class="setting-input">
+                                <input type="number" 
+                                   id="height-${layer.index}" 
+                                   value="${layer.height}" 
+                                   min="0.1" 
+                                   max="50" 
+                                   step="0.1"
+                                   onchange="updateLayer(${layer.index}, 'height', this.value)">
+                                <span>mm</span>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label>Filament:</label>
+                            <div class="setting-input">
+                                <select id="filament-${layer.index}" class="filament-select" style="background-color: ${colors[layer.filament]}; color: ${layer.filament === 3 ? '#FFFFFF' : '#000000'};" onchange="updateLayer(${layer.index}, 'filament', this.value)">
+                                    <option value="1" ${layer.filament === 1 ? 'selected' : ''}>Polymaker PC-PBT white</option>
+                                    <option value="2" ${layer.filament === 2 ? 'selected' : ''}>Polylite clear PC</option>
+                                    <option value="3" ${layer.filament === 3 ? 'selected' : ''}>Polymaker PC-PBT black</option>
+                                    <option value="4" ${layer.filament === 4 ? 'selected' : ''}>Extra free PC any color</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-group" ${layer.name === "Return_top" || layer.name === "Inside_white_top" ? 'style="display: none;"' : ''}>
+                            <label>Wall Loops:</label>
+                            <div class="setting-input">
+                                <select id="walls-${layer.index}" onchange="updateLayer(${layer.index}, 'wallLoops', this.value)">
+                                    <option value="1" ${layer.wallLoops === 1 ? 'selected' : ''}>1</option>
+                                    <option value="2" ${layer.wallLoops === 2 ? 'selected' : ''}>2</option>
+                                    <option value="3" ${layer.wallLoops === 3 ? 'selected' : ''}>3</option>
+                                    <option value="4" ${layer.wallLoops === 4 ? 'selected' : ''}>4</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-group" ${isInsideFloor ? '' : 'style="display: none;"'}>
+                            <label>Bottom Shell Layers:</label>
+                            <div class="setting-input">
+                                <select id="bottomShell-${layer.index}" onchange="updateLayer(${layer.index}, 'bottomShellLayers', this.value)">
+                                    <option value="0" ${layer.bottomShellLayers === 0 ? 'selected' : ''}>0</option>
+                                    <option value="1" ${layer.bottomShellLayers === 1 ? 'selected' : ''}>1</option>
+                                    <option value="2" ${layer.bottomShellLayers === 2 ? 'selected' : ''}>2</option>
+                                    <option value="3" ${layer.bottomShellLayers === 3 ? 'selected' : ''}>3</option>
+                                    <option value="4" ${layer.bottomShellLayers === 4 ? 'selected' : ''}>4</option>
+                                    <option value="5" ${layer.bottomShellLayers === 5 ? 'selected' : ''}>5</option>
+                                    <option value="6" ${layer.bottomShellLayers === 6 ? 'selected' : ''}>6</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="setting-group" ${isInsideFloor ? '' : 'style="display: none;"'}>
+                            <label>Z Offset:</label>
+                            <div class="setting-input">
+                                <input type="number" 
+                                       id="zOffset-${layer.index}" 
+                                       value="${layer.zOffset || 0.2}" 
+                                       min="0" 
+                                       max="2" 
+                                       step="0.1"
+                                       onchange="updateLayer(${layer.index}, 'zOffset', this.value)">
+                                <span>mm</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Layer-specific enable/disable buttons -->
+                        ${layer.name === "Inside_floor" ? `
+                        <div class="setting-group">
+                            <label>Inside Floor:</label>
+                            <div class="setting-input">
+                                <select id="insideFloorEnabled-${layer.index}" class="${layer.enabled ? '' : 'disabled'}" onchange="updateLayer(${layer.index}, 'enabled', this.value === 'true')">
+                                    <option value="true" ${layer.enabled ? 'selected' : ''}>Inside floor enable</option>
+                                    <option value="false" ${!layer.enabled ? 'selected' : ''}>Inside floor disable</option>
+                                </select>
+                            </div>
+                        </div>` : ''}
+                        
+                        ${layer.name === "Inside_white" ? `
+                        <div class="setting-group">
+                            <label>Inside White:</label>
+                            <div class="setting-input">
+                                <select id="insideWhiteEnabled-${layer.index}" class="${layer.enabled ? '' : 'disabled'}" onchange="updateLayer(${layer.index}, 'enabled', this.value === 'true')">
+                                    <option value="true" ${layer.enabled ? 'selected' : ''}>Inside white enable</option>
+                                    <option value="false" ${!layer.enabled ? 'selected' : ''}>Inside white disable</option>
+                                </select>
+                            </div>
+                        </div>` : ''}
+                        
+                        ${layer.name === "Return_floor" ? `
+                        <div class="setting-group">
+                            <label>Return Floor:</label>
+                            <div class="setting-input">
+                                <select id="returnFloorEnabled-${layer.index}" class="${layer.enabled ? '' : 'disabled'}" onchange="updateLayer(${layer.index}, 'enabled', this.value === 'true')">
+                                    <option value="true" ${layer.enabled ? 'selected' : ''}>Return floor enable</option>
+                                    <option value="false" ${!layer.enabled ? 'selected' : ''}>Return floor disable</option>
+                                </select>
+                            </div>
+                        </div>` : ''}
+                        
+                        ${layer.name === "Return_top" ? `
+                        <div class="setting-group">
+                            <label>Return Top:</label>
+                            <div class="setting-input">
+                                <select id="returnTopEnabled-${layer.index}" class="${layer.enabled ? '' : 'disabled'}" onchange="updateLayer(${layer.index}, 'enabled', this.value === 'true')">
+                                    <option value="true" ${layer.enabled ? 'selected' : ''}>Return top enable</option>
+                                    <option value="false" ${!layer.enabled ? 'selected' : ''}>Return top disable</option>
+                                </select>
+                            </div>
+                        </div>` : ''}`;
+                    
+                    // Add Return_top2 layer button for Return_top card
+                    if (isReturnTop) {
+                        const returnTop2Layer = layers.find(l => l.name === "Return_top2");
+                        if (returnTop2Layer) {
+                            const enabledClass = returnTop2Layer.enabled ? '' : 'disabled';
+                            html += `
+                            <div class="setting-group">
+                                <label>Return Top2:</label>
+                                <div class="setting-input">
+                                    <select id="returnTop2Enabled-${returnTop2Layer.index}" class="${enabledClass}" onchange="updateLayer(${returnTop2Layer.index}, 'enabled', this.value === 'true')">
+                                        <option value="true" ${returnTop2Layer.enabled ? 'selected' : ''}>Return top2 enable</option>
+                                        <option value="false" ${!returnTop2Layer.enabled ? 'selected' : ''}>Return top2 disable</option>
+                                    </select>
+                                </div>
+                            </div>`;
+                        }
+                    }
+                    
+                    if (isReturnTop && returnTop3Layer) {
+                        const enabledClass = returnTop3Layer.enabled ? '' : 'disabled';
+                        html += `
+                        <div class="setting-group">
+                            <label>Click Ring:</label>
+                            <div class="setting-input">
+                                <select id="clickRingEnabled-${returnTop3Layer.index}" class="${enabledClass}" onchange="updateLayer(${returnTop3Layer.index}, 'enabled', this.value === 'true')">
+                                    <option value="true" ${returnTop3Layer.enabled ? 'selected' : ''}>Click ring enable</option>
+                                    <option value="false" ${!returnTop3Layer.enabled ? 'selected' : ''}>Click ring disable</option>
+                                </select>
+                            </div>
+                        </div>`;
+                    }
+                    
+                    if (isInsideWhite && insideWhiteTopLayer) {
+                        const enabledClass = insideWhiteTopLayer.enabled ? '' : 'disabled';
+                        html += `
+                        <div class="setting-group">
+                            <label>Inside White Top:</label>
+                            <div class="setting-input">
+                                <select id="insideWhiteTopEnabled-${insideWhiteTopLayer.index}" class="${enabledClass}" onchange="updateLayer(${insideWhiteTopLayer.index}, 'enabled', this.value === 'true')">
+                                    <option value="true" ${insideWhiteTopLayer.enabled ? 'selected' : ''}>Inside white top enable</option>
+                                    <option value="false" ${!insideWhiteTopLayer.enabled ? 'selected' : ''}>Inside white top disable</option>
+                                </select>
+                            </div>
+                        </div>`;
+                    }
+                    
+                    html += `</div>`;
+                });
+                
+                layerCardsContainer.innerHTML = html;
+                
+                updateTotalHeight();
+            }
+            
+            // Make renderLayers globally accessible
+            window.renderLayers = renderLayers;
+            
+            // =====================================================================================
+            // LAYER UPDATE FUNCTIONS - FIXED WITH MANUAL OVERRIDE PROTECTION
+            // =====================================================================================
+            
+            window.updateLayer = function(index, property, value) {
+                const layer = layers.find(l => l.index === index);
+                if (!layer) return;
+                
+                if (property === 'enabled') {
+                    layer.enabled = value;
+                    renderLayers(); // Re-render to update visual state
+                    return;
+                }
+                
+                if (property === 'height') {
+                    layer.height = parseFloat(value);
+                    // Mark this layer as having manual height override
+                    manualHeightOverrides.add(layer.name);
+                    updateTotalHeight();
+                } else if (property === 'filament') {
+                    layer.filament = parseInt(value);
+                    // Mark this layer as having manual filament override
+                    manualFilamentOverrides.add(layer.name);
+                    console.log(`🔒 Manual filament override set for ${layer.name}: ${value}`);
+                    
+                    // Update dependent layers ONLY if they haven't been manually overridden
+                    if (layer.name === "Inside_white") {
+                        const insideWhiteTopLayer = layers.find(l => l.name === "Inside_white_top");
+                        if (insideWhiteTopLayer && !manualFilamentOverrides.has("Inside_white_top")) {
+                            insideWhiteTopLayer.filament = parseInt(value);
+                        }
+                    }
+                    
+                    if (layer.name === "Return_top") {
+                        const top2Layer = layers.find(l => l.name === "Return_top2");
+                        const top3Layer = layers.find(l => l.name === "Return_top3");
+                        if (top2Layer && !manualFilamentOverrides.has("Return_top2")) {
+                            top2Layer.filament = parseInt(value);
+                        }
+                        if (top3Layer && !manualFilamentOverrides.has("Return_top3")) {
+                            top3Layer.filament = parseInt(value);
+                        }
+                    }
+                    
+                    const filamentSelect = document.getElementById(`filament-${index}`);
+                    if (filamentSelect) {
+                        filamentSelect.style.backgroundColor = colors[value];
+                        filamentSelect.style.color = parseInt(value) === 3 ? '#FFFFFF' : '#000000';
+                    }
+                } else if (property === 'wallLoops') {
+                    layer.wallLoops = parseInt(value);
+                } else if (property === 'bottomShellLayers') {
+                    layer.bottomShellLayers = parseInt(value);
+                } else if (property === 'zOffset') {
+                    layer.zOffset = parseFloat(value);
+                }
+            };
+            
+            // =====================================================================================
+            // LIGHTING MODE BUTTON FUNCTIONS - FIXED WITH OVERRIDE PROTECTION
+            // =====================================================================================
+            
+            window.selectLightingMode = function(mode) {
+                selectedLightingMode = mode;
+                const config = lightingModeConfigs[mode];
+                
+                if (!config) {
+                    console.error(`Unknown lighting mode: ${mode}`);
+                    return;
+                }
+                
+                console.log(`🎯 Selected lighting mode: ${config.name} (${config.code})`);
+                console.log(`🎯 Config: filament1=${config.filament1}, filament2=${config.filament2}, layout=${config.layout}`);
+                
+                highlightSelectedButton(mode);
+                applyLightingConfig(config);
+            };
+            
+            function highlightSelectedButton(mode) {
+                const buttons = document.querySelectorAll('[onclick^="selectLightingMode"]');
+                buttons.forEach(btn => {
+                    btn.style.border = 'none';
+                    btn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+                });
+                
+                const activeButton = document.querySelector(`[onclick="selectLightingMode('${mode}')"]`);
+                if (activeButton) {
+                    activeButton.style.border = '3px solid #FFD700';
+                    activeButton.style.boxShadow = '0 4px 8px rgba(255,215,0,0.5)';
+                }
+            }
+            
+            function applyLightingConfig(config) {
+                const selectorContainer = document.querySelector('.filament-selectors-container');
+                
+                if (!selectorContainer) {
+                    console.error('Selector container not found');
+                    return;
+                }
+                
+                updateLayersFromConfig(config);
+                
+                if (config.layout === 'single') {
+                    createSingleFilamentLayout(config);
+                } else if (config.layout === 'dual') {
+                    createDualFilamentLayout(config);
+                }
+            }
+            
+            // =====================================================================================
+            // FIXED: LIGHTING MODE CONFIG APPLICATION WITH OVERRIDE PROTECTION
+            // =====================================================================================
+            function updateLayersFromConfig(config) {
+                const returnFloorLayer = layers.find(layer => layer.name === "Return_floor");
+                const returnTopLayer = layers.find(layer => layer.name === "Return_top");
+                
+                console.log(`🔧 Applying lighting config: ${config.name}`);
+                console.log(`🔧 filament1=${config.filament1}, filament2=${config.filament2}, layout=${config.layout}`);
+                
+                // Update Return_floor filament ONLY if not manually overridden
+                if (returnFloorLayer && !manualFilamentOverrides.has("Return_floor")) {
+                    console.log(`✅ Setting Return_floor filament to ${config.filament1}`);
+                    returnFloorLayer.filament = config.filament1;
+                    
+                    // Update height if not manually overridden
+                    if (!manualHeightOverrides.has("Return_floor")) {
+                        if (config.specialHeight) {
+                            returnFloorLayer.height = 0.6;
+                        } else {
+                            returnFloorLayer.height = config.height1;
+                        }
+                    }
+                } else if (manualFilamentOverrides.has("Return_floor")) {
+                    console.log(`🔒 Return_floor filament manually overridden - skipping`);
+                }
+                
+                // Update Return_top filament ONLY if not manually overridden
+                if (returnTopLayer && !manualFilamentOverrides.has("Return_top")) {
+                    if (config.layout === 'dual' && config.filament2) {
+                        console.log(`✅ Setting Return_top filament to ${config.filament2} (dual layout)`);
+                        returnTopLayer.filament = config.filament2;
+                    } else {
+                        console.log(`✅ Setting Return_top filament to ${config.filament1} (single layout)`);
+                        returnTopLayer.filament = config.filament1;
+                    }
+                } else if (manualFilamentOverrides.has("Return_top")) {
+                    console.log(`🔒 Return_top filament manually overridden - skipping`);
+                }
+                
+                // Update dependent layers ONLY if not manually overridden
+                const top2Layer = layers.find(layer => layer.name === "Return_top2");
+                const top3Layer = layers.find(layer => layer.name === "Return_top3");
+                
+                if (top2Layer && !manualFilamentOverrides.has("Return_top2")) {
+                    top2Layer.filament = returnTopLayer ? returnTopLayer.filament : config.filament1;
+                }
+                if (top3Layer && !manualFilamentOverrides.has("Return_top3")) {
+                    top3Layer.filament = returnTopLayer ? returnTopLayer.filament : config.filament1;
+                }
+                
+                updateTotalHeight();
+                updateSectionCDisplays();
+            }
+            
+            function updateSectionCDisplays() {
+                const returnFloorLayer = layers.find(layer => layer.name === "Return_floor");
+                const returnTopLayer = layers.find(layer => layer.name === "Return_top");
+                
+                if (returnFloorLayer) {
+                    const returnFloorSelect = document.getElementById(`filament-${returnFloorLayer.index}`);
+                    const returnFloorHeight = document.getElementById(`height-${returnFloorLayer.index}`);
+                    if (returnFloorSelect) {
+                        returnFloorSelect.value = returnFloorLayer.filament;
+                        const filament = filamentTypes[returnFloorLayer.filament];
+                        returnFloorSelect.style.backgroundColor = filament.color;
+                        returnFloorSelect.style.color = filament.textColor;
+                    }
+                    if (returnFloorHeight) {
+                        returnFloorHeight.value = returnFloorLayer.height;
+                    }
+                }
+                
+                if (returnTopLayer) {
+                    const returnTopSelect = document.getElementById(`filament-${returnTopLayer.index}`);
+                    if (returnTopSelect) {
+                        returnTopSelect.value = returnTopLayer.filament;
+                        const filament = filamentTypes[returnTopLayer.filament];
+                        returnTopSelect.style.backgroundColor = filament.color;
+                        returnTopSelect.style.color = filament.textColor;
+                    }
+                }
+            }
+            
+            function createSingleFilamentLayout(config) {
+                const selectorContainer = document.querySelector('.filament-selectors-container');
+                const filament = filamentTypes[config.filament1];
+                const currentTotalHeight = getCurrentTotalHeight();
+                
+                selectorContainer.innerHTML = `
+                    <div style="display: flex; flex-direction: column;">
+                        <label style="font-weight: bold; margin-bottom: 8px; font-size: 14px;">Filament:</label>
+                        <select id="topFilament1" class="filament-select" style="width: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; height: 36px; font-weight: bold; background-color: ${filament.color}; color: ${filament.textColor};" onchange="updateTopFilament(this, 1)">
+                            <option value="1">Polymaker PC-PBT white</option>
+                            <option value="2">Polylite clear PC</option>
+                            <option value="3">Polymaker PC-PBT black</option>
+                            <option value="4">Extra free PC any color</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <label style="font-weight: bold; margin-bottom: 8px; font-size: 14px;">Total return height</label>
+                        <div style="display: flex; align-items: center;">
+                            <input type="number" value="${currentTotalHeight}" id="topTotalHeight" style="width: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-right: 5px; height: 20px;" onchange="updateTopTotalHeight(this.value)">
+                            <span style="font-weight: bold;">mm</span>
+                        </div>
+                    </div>
+                `;
+                
+                const topFilament1 = document.getElementById('topFilament1');
+                if (topFilament1) {
+                    topFilament1.value = config.filament1;
+                }
+            }
+            
+            function createDualFilamentLayout(config) {
+                const selectorContainer = document.querySelector('.filament-selectors-container');
+                const filament1 = filamentTypes[config.filament1];
+                const filament2 = filamentTypes[config.filament2];
+                const currentTotalHeight = getCurrentTotalHeight();
+                
+                selectorContainer.innerHTML = `
+                    <div style="display: flex; flex-direction: column;">
+                        <label style="font-weight: bold; margin-bottom: 8px; font-size: 14px;">Filament:</label>
+                        <select id="topFilament1" class="filament-select" style="width: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; height: 36px; font-weight: bold; background-color: ${filament1.color}; color: ${filament1.textColor};" onchange="updateTopFilament(this, 1)">
+                            <option value="1">Polymaker PC-PBT white</option>
+                            <option value="2">Polylite clear PC</option>
+                            <option value="3">Polymaker PC-PBT black</option>
+                            <option value="4">Extra free PC any color</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <label style="font-weight: bold; margin-bottom: 8px; font-size: 14px;">Height:</label>
+                        <div style="display: flex; align-items: center;">
+                            <input type="number" value="${config.height1}" id="topHeight1" style="width: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-right: 5px; height: 20px;" onchange="updateTopHeight(this.value, 1)">
+                            <span style="font-weight: bold;">mm</span>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <label style="font-weight: bold; margin-bottom: 8px; font-size: 14px;">Filament:</label>
+                        <select id="topFilament2" class="filament-select" style="width: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; height: 36px; font-weight: bold; background-color: ${filament2.color}; color: ${filament2.textColor};" onchange="updateTopFilament(this, 2)">
+                            <option value="1">Polymaker PC-PBT white</option>
+                            <option value="2">Polylite clear PC</option>
+                            <option value="3">Polymaker PC-PBT black</option>
+                            <option value="4">Extra free PC any color</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <label style="font-weight: bold; margin-bottom: 8px; font-size: 14px;">Total return height</label>
+                        <div style="display: flex; align-items: center;">
+                            <input type="number" value="${currentTotalHeight}" id="topTotalHeight" style="width: 60px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; margin-right: 5px; height: 20px;" onchange="updateTopTotalHeight(this.value)">
+                            <span style="font-weight: bold;">mm</span>
+                        </div>
+                    </div>
+                `;
+                
+                const topFilament1 = document.getElementById('topFilament1');
+                const topFilament2 = document.getElementById('topFilament2');
+                if (topFilament1) topFilament1.value = config.filament1;
+                if (topFilament2) topFilament2.value = config.filament2;
+            }
+            
+            function getCurrentTotalHeight() {
+                const enabledLayers = getEnabledLayers();
+                const returnTopLayer = enabledLayers.find(layer => layer.name === "Return_top");
+                const returnFloorLayer = enabledLayers.find(layer => layer.name === "Return_floor");
+                return (returnTopLayer ? returnTopLayer.height : 0) + (returnFloorLayer ? returnFloorLayer.height : 0);
+            }
+            
+            // =====================================================================================
+            // TOP SELECTOR UPDATE FUNCTIONS - FIXED WITH OVERRIDE PROTECTION
+            // =====================================================================================
+            
+            window.updateTopHeight = function(value, heightId) {
+                const heightValue = parseFloat(value);
+                const config = lightingModeConfigs[selectedLightingMode];
+                
+                if (heightId === 1) {
+                    if (config && config.specialHeight) {
+                        const topHeight1 = document.getElementById('topHeight1');
+                        if (topHeight1) topHeight1.value = 0.6;
+                        
+                        const returnFloorLayer = layers.find(layer => layer.name === "Return_floor");
+                        if (returnFloorLayer && !manualHeightOverrides.has("Return_floor")) {
+                            returnFloorLayer.height = 0.6;
+                            const originalInput = document.getElementById(`height-${returnFloorLayer.index}`);
+                            if (originalInput) {
+                                originalInput.value = 0.6;
+                            }
+                        }
+                    } else {
+                        const returnFloorLayer = layers.find(layer => layer.name === "Return_floor");
+                        if (returnFloorLayer && !manualHeightOverrides.has("Return_floor")) {
+                            returnFloorLayer.height = heightValue;
+                            const originalInput = document.getElementById(`height-${returnFloorLayer.index}`);
+                            if (originalInput) {
+                                originalInput.value = heightValue.toFixed(1);
+                            }
+                        }
+                    }
+                    updateTotalHeight();
+                }
+            };
+            
+            window.updateTopTotalHeight = function(value) {
+                const totalValue = parseFloat(value);
+                const config = lightingModeConfigs[selectedLightingMode];
+                
+                if (config && config.specialHeight) {
+                    const returnTopLayer = layers.find(layer => layer.name === "Return_top");
+                    const returnFloorLayer = layers.find(layer => layer.name === "Return_floor");
+                    
+                    if (returnFloorLayer && returnTopLayer) {
+                        if (!manualHeightOverrides.has("Return_floor")) {
+                            returnFloorLayer.height = 0.6;
+                            const returnFloorInput = document.getElementById(`height-${returnFloorLayer.index}`);
+                            if (returnFloorInput) returnFloorInput.value = 0.6;
+                        }
+                        
+                        const topHeight1 = document.getElementById('topHeight1');
+                        if (topHeight1) topHeight1.value = 0.6;
+                        
+                        if (!manualHeightOverrides.has("Return_top")) {
+                            const returnTopHeight = totalValue - 0.6;
+                            returnTopLayer.height = Math.max(0.1, returnTopHeight);
+                            const returnTopInput = document.getElementById(`height-${returnTopLayer.index}`);
+                            if (returnTopInput) returnTopInput.value = Math.max(0.1, returnTopHeight).toFixed(1);
+                        }
+                    }
+                } else {
+                    const halfValue = totalValue / 2;
+                    
+                    const returnTopLayer = layers.find(layer => layer.name === "Return_top");
+                    const returnFloorLayer = layers.find(layer => layer.name === "Return_floor");
+                    
+                    if (returnTopLayer && !manualHeightOverrides.has("Return_top")) {
+                        returnTopLayer.height = halfValue;
+                        const returnTopInput = document.getElementById(`height-${returnTopLayer.index}`);
+                        if (returnTopInput) returnTopInput.value = halfValue.toFixed(1);
+                    }
+                    
+                    if (returnFloorLayer && !manualHeightOverrides.has("Return_floor")) {
+                        returnFloorLayer.height = halfValue;
+                        const returnFloorInput = document.getElementById(`height-${returnFloorLayer.index}`);
+                        if (returnFloorInput) returnFloorInput.value = halfValue.toFixed(1);
+                        
+                        const topHeight1 = document.getElementById('topHeight1');
+                        if (topHeight1) topHeight1.value = halfValue.toFixed(0);
+                    }
+                }
+                
+                updateTotalHeight();
+            };
+            
+            window.updateTopFilament = function(selectElement, filamentId) {
+                const value = parseInt(selectElement.value);
+                const filament = filamentTypes[value];
+                selectElement.style.backgroundColor = filament.color;
+                selectElement.style.color = filament.textColor;
+                
+                const config = lightingModeConfigs[selectedLightingMode];
+                
+                if (filamentId === 1) {
+                    const returnFloorLayer = layers.find(layer => layer.name === "Return_floor");
+                    if (returnFloorLayer && !manualFilamentOverrides.has("Return_floor")) {
+                        returnFloorLayer.filament = value;
+                    }
+                    
+                    if (config && config.layout === 'single') {
+                        const returnTopLayer = layers.find(layer => layer.name === "Return_top");
+                        if (returnTopLayer && !manualFilamentOverrides.has("Return_top")) {
+                            returnTopLayer.filament = value;
+                            const top2Layer = layers.find(layer => layer.name === "Return_top2");
+                            const top3Layer = layers.find(layer => layer.name === "Return_top3");
+                            if (top2Layer && !manualFilamentOverrides.has("Return_top2")) {
+                                top2Layer.filament = value;
+                            }
+                            if (top3Layer && !manualFilamentOverrides.has("Return_top3")) {
+                                top3Layer.filament = value;
+                            }
+                        }
+                    }
+                    
+                    updateSectionCDisplays();
+                    
+                } else if (filamentId === 2) {
+                    const returnTopLayer = layers.find(layer => layer.name === "Return_top");
+                    if (returnTopLayer && !manualFilamentOverrides.has("Return_top")) {
+                        returnTopLayer.filament = value;
+                        const top2Layer = layers.find(layer => layer.name === "Return_top2");
+                        const top3Layer = layers.find(layer => layer.name === "Return_top3");
+                        if (top2Layer && !manualFilamentOverrides.has("Return_top2")) {
+                            top2Layer.filament = value;
+                        }
+                        if (top3Layer && !manualFilamentOverrides.has("Return_top3")) {
+                            top3Layer.filament = value;
+                        }
+                    }
+                    
+                    updateSectionCDisplays();
+                }
+            };
+            
+            // Initialize with default lighting mode
+            selectLightingMode('front_lit');
+            
+            // =====================================================================================
+            // 3MF GENERATION FUNCTION - UPDATED FOR SEPARATE OBJECTS WITH ZIP OUTPUT
+            // =====================================================================================
+            function generate3MF() {
+                if (!svgReturnFile || !svgWhiteFile) {
+                    alert('Please process an SVG file in Shapely first!');
+                    return;
+                }
+                
+                const enabledLayers = getEnabledLayers();
+                
+                if (enabledLayers.length === 0) {
+                    alert('No layers are enabled! Please enable at least one layer.');
+                    return;
+                }
+                
+                if (enabledLayers.some(layer => layer.height <= 0)) {
+                    alert('All enabled layers must have a height greater than 0.');
+                    return;
+                }
+                
+                // UPDATED: Both modes now use the same generation function with different parameters
+                if (printingMode === 'combined') {
+                    generateCombined3MF(enabledLayers);
+                } else if (printingMode === 'separate') {
+                    generateSeparate3MF(enabledLayers);
+                }
+            }
+
+            function generateCombined3MF(enabledLayers) {
+                statusText.textContent = 'Processing COMBINED 3MF with enabled layers...';
+                console.log('Generating COMBINED 3MF with enabled layers:', enabledLayers.map(l => l.name));
+                
+                const formData = new FormData();
+                formData.append('returnSvgFile', svgReturnFile);
+                formData.append('whiteSvgFile', svgWhiteFile);
+                formData.append('printingMode', 'combined');
+                
+                const insideFloorLayer = enabledLayers.find(layer => layer.name === "Inside_floor");
+                const bottomShellLayers = insideFloorLayer ? insideFloorLayer.bottomShellLayers : 2;
+                
+                const dataObj = {
+                    layerSettings: enabledLayers,
+                    bottomShellLayers: bottomShellLayers,
+                    printingMode: 'combined'
+                };
+                
+                formData.append('data', JSON.stringify(dataObj));
+                
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/generate', true);
+                xhr.responseType = 'blob';
+                
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        const blob = xhr.response;
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = 'Combined.3mf';
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        
+                        statusText.textContent = `✅ COMBINED 3MF generated with ${enabledLayers.length} enabled layers!`;
+                        resetGenerateButton();
+                    } else {
+                        statusText.textContent = 'Error: Server returned ' + xhr.status;
+                    }
+                };
+                
+                xhr.onerror = function() {
+                    statusText.textContent = 'Error: Network request failed';
+                };
+                
+                xhr.send(formData);
+            }
+
+            // UPDATED: New function for separate objects - creates ZIP with two 3MF files
+            function generateSeparate3MF(enabledLayers) {
+                statusText.textContent = 'Processing SEPARATE 3MFs (two files in ZIP)...';
+                console.log('Generating SEPARATE 3MFs with enabled layers:', enabledLayers.map(l => l.name));
+                
+                const formData = new FormData();
+                formData.append('returnSvgFile', svgReturnFile);
+                formData.append('whiteSvgFile', svgWhiteFile);
+                formData.append('printingMode', 'separate');
+                
+                const insideFloorLayer = enabledLayers.find(layer => layer.name === "Inside_floor");
+                const bottomShellLayers = insideFloorLayer ? insideFloorLayer.bottomShellLayers : 2;
+                
+                const dataObj = {
+                    layerSettings: enabledLayers,
+                    bottomShellLayers: bottomShellLayers,
+                    printingMode: 'separate'
+                    // NOTE: No X offset needed - creating separate files
+                };
+                
+                formData.append('data', JSON.stringify(dataObj));
+                
+                // UPDATED: Use same endpoint as combined
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/generate', true);
+                xhr.responseType = 'blob';
+                
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        const blob = xhr.response;
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        // UPDATED: ZIP file instead of single 3MF
+                        a.download = 'Separate.zip';
+                        document.body.appendChild(a);
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                        
+                        statusText.textContent = `✅ SEPARATE 3MFs generated! ZIP contains Return + White 3MF files (${enabledLayers.length} layers each)`;
+                        resetGenerateButton();
+                    } else {
+                        statusText.textContent = 'Error: Server returned ' + xhr.status;
+                    }
+                };
+                
+                xhr.onerror = function() {
+                    statusText.textContent = 'Error: Network request failed';
+                };
+                
+                xhr.send(formData);
+            }
+
+            function resetGenerateButton() {
+                generateBtn.style.background = '#ccc';
+                generateBtn.style.color = '#999';
+                generateBtn.disabled = true;
+                generateBtn.style.cursor = 'not-allowed';
+                generateBtn.textContent = 'Generate 3MF';
+            }
+            
+            // Make global functions available
+            window.getEnabledLayers = getEnabledLayers;
+            window.enableLayer = enableLayer;
+            window.disableLayer = disableLayer;
+            window.toggleLayer = toggleLayer;
+            window.isLayerEnabled = isLayerEnabled;
+            window.getLayerStatus = getLayerStatus;
+            
+            console.log('✅ Switchable Layer System initialized with override protection');
+            console.log('Current layer status:');
+            console.table(getLayerStatus());
+        });
+    </script>
+</body>
+</html>
