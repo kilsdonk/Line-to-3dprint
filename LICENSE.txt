@@ -1,0 +1,17 @@
+Copyright (c) 2025 Roger Kilsdonk and Harry Sprangers  
+All rights reserved.
+
+This software and its associated files (hereinafter referred to as “the Software”) are proprietary information and trade secrets of Roger Kilsdonk <kilsdonk@gmail.com> and Harry Sprangers <harrys@uptbb.com>.
+
+Unauthorized copying, reproduction, modification, distribution, publication, sublicensing, sale, or any other use of the Software, in whole or in part, is strictly prohibited without prior written permission from both copyright holders.
+
+No license or right, express or implied, is granted to any party to use, copy, modify, or distribute the Software without a valid, paid, and duly signed commercial license agreement.
+
+Any unauthorized use of the Software may result in civil and/or criminal liability and will be prosecuted to the maximum extent permitted by law.
+
+To inquire about licensing terms or to obtain a commercial license, please contact:
+
+Roger Kilsdonk – kilsdonk@gmail.com  
+Harry Sprangers – harrys@uptbb.com
+
+This license file does not grant any rights. A separate, signed license agreement is required for any permitted use.
